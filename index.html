@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102c26">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Smart Seller BD</title>
+<style>
+:root{--green:#123c32;--lime:#c8f169;--bg:#f4f7f4;--card:#fff;--muted:#66756e;--line:#e1e9e3;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#18231e}
+header{background:var(--green);color:white;padding:20px 16px 18px;border-radius:0 0 22px 22px}
+.brand{font-size:22px;font-weight:800;letter-spacing:.2px}.tag{font-size:12px;color:#d0e0d8;margin-top:3px}
+.price{display:inline-block;margin-top:12px;background:#254d41;padding:7px 10px;border-radius:10px;font-size:13px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px;background:var(--bg);position:sticky;top:0;z-index:3}
+nav button{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:12px;padding:10px 12px;color:#23352c;font-weight:650}
+nav button.active{background:var(--green);color:white;border-color:var(--green)}
+main{padding:4px 14px 36px;max-width:850px;margin:auto}.page{display:none}.page.active{display:block}
+h2{font-size:19px;margin:12px 0}h3{font-size:15px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 7px #173d2910}
+.metric{font-size:12px;color:var(--muted)}.num{font-size:23px;font-weight:800;margin-top:5px;overflow-wrap:anywhere}.green{color:#177245}.red{color:var(--red)}
+label{display:block;font-size:12px;color:var(--muted);margin:9px 0 5px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #ccd8cf;border-radius:10px;font:inherit;background:#fff;color:#17231d}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:0;background:var(--green);color:white;padding:11px 14px;border-radius:11px;font:inherit;font-weight:700;margin-top:12px;cursor:pointer}.btn.secondary{background:#e9f2eb;color:var(--green)}.btn.danger{background:#fff0ef;color:var(--red)}
+.item{padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.itemtop{display:flex;justify-content:space-between;gap:10px;font-weight:700}.small{font-size:12px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}.pill{font-size:11px;padding:4px 7px;border-radius:20px;background:#edf5ee;color:#17663e;white-space:nowrap}
+.empty{font-size:13px;color:var(--muted);padding:10px 0}.note{font-size:12px;color:var(--muted);line-height:1.55}.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding-left:max(18px,calc((100% - 820px)/2));padding-right:max(18px,calc((100% - 820px)/2))}}
+</style></head>
+<body>
+<header><div class="brand">◈ Smart Seller BD</div><div class="tag">আপনার অনলাইন ব্যবসা, এক জায়গায়</div><div class="price">Premium Plan · ৳১,০০০ / মাস</div></header>
+<nav id="nav">
+<button class="active" data-page="home">ড্যাশবোর্ড</button><button data-page="orders">অর্ডার</button><button data-page="customers">কাস্টমার</button><button data-page="stock">স্টক</button><button data-page="delivery">ডেলিভারি</button><button data-page="reports">রিপোর্ট</button>
+</nav>
+<main>
+<section id="home" class="page active">
+<h2>আজকের ব্যবসার হিসাব</h2><div class="grid">
+<div class="card"><div class="metric">আজকের বিক্রি</div><div id="todaySales" class="num">৳০</div></div>
+<div class="card"><div class="metric">মোট অর্ডার</div><div id="orderCount" class="num">০</div></div>
+<div class="card"><div class="metric">আনুমানিক লাভ</div><div id="profit" class="num green">৳০</div></div>
+<div class="card"><div class="metric">স্টক পণ্য</div><div id="stockCount" class="num">০</div></div></div>
+<div class="card"><h3>দ্রুত কাজ</h3><div class="toolbar"><button class="btn" onclick="showPage('orders')">＋ অর্ডার যোগ</button><button class="btn secondary" onclick="showPage('stock')">＋ পণ্য যোগ</button></div></div>
+<div class="card"><h3>সাম্প্রতিক অর্ডার</h3><div id="recentOrders" class="empty">এখনো কোনো অর্ডার নেই।</div></div>
+<div class="card"><div class="note">ডেটা এই ফোনের ব্রাউজারে সংরক্ষিত থাকে। ব্রাউজারের ডেটা মুছলে তথ্য হারাতে পারে। এখনো ক্লাউড ব্যাকআপ বা অনলাইন সাবস্ক্রিপশন পেমেন্ট চালু নেই।</div></div>
+</section>
+<section id="orders" class="page"><h2>অর্ডার ম্যানেজমেন্ট</h2>
+<div class="card"><h3>নতুন অর্ডার</h3><form id="orderForm">
+<label>কাস্টমারের নাম</label><input id="cname" required placeholder="যেমন: সুমাইয়া আক্তার">
+<div class="row"><div><label>ফোন নম্বর</label><input id="phone" required inputmode="tel" placeholder="01XXXXXXXXX"></div><div><label>অর্ডারের তারিখ</label><input id="odate" type="date" required></div></div>
+<label>ঠিকানা</label><input id="address" placeholder="এলাকা, জেলা">
+<label>পণ্যের নাম</label><input id="product" required placeholder="যেমন: কুর্তি">
+<div class="row"><div><label>বিক্রয় মূল্য (৳)</label><input id="sale" type="number" min="0" required></div><div><label>পণ্যের ক্রয়মূল্য (৳)</label><input id="cost" type="number" min="0" required></div></div>
+<div class="row"><div><label>ডেলিভারি খরচ (৳)</label><input id="shipcost" type="number" min="0" value="0"></div><div><label>পেমেন্ট</label><select id="payment"><option>বাকি</option><option>পরিশোধিত</option><option>ক্যাশ অন ডেলিভারি</option></select></div></div>
+<label>ডেলিভারি স্ট্যাটাস</label><select id="status"><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select>
+<button class="btn" type="submit">অর্ডার সংরক্ষণ করুন</button></form></div>
+<div class="card"><h3>সব অর্ডার</h3><div id="orderList" class="empty">কোনো অর্ডার নেই।</div></div>
+</section>
+<section id="customers" class="page"><h2>কাস্টমার তালিকা</h2><div class="card"><div class="note">অর্ডার যোগ করলে কাস্টমারের নাম, ফোন ও ঠিকানা এখানে স্বয়ংক্রিয়ভাবে দেখা যাবে।</div><div id="customerList" class="empty">এখনো কাস্টমার নেই।</div></div></section>
+<section id="stock" class="page"><h2>স্টক ও পণ্য</h2><div class="card"><h3>নতুন পণ্য যোগ করুন</h3><form id="stockForm"><label>পণ্যের নাম</label><input id="sname" required placeholder="পণ্যের নাম"><div class="row"><div><label>পরিমাণ</label><input id="qty" type="number" min="0" required></div><div><label>প্রতি পণ্যের ক্রয়মূল্য (৳)</label><input id="unitcost" type="number" min="0" required></div></div><div class="row"><div><label>বিক্রয়মূল্য (৳)</label><input id="unitprice" type="number" min="0" required></div><div><label>SKU / কোড (ঐচ্ছিক)</label><input id="sku"></div></div><button class="btn" type="submit">স্টকে যোগ করুন</button></form></div><div class="card"><h3>স্টকের তালিকা</h3><div id="stockList" class="empty">এখনো পণ্য যোগ করা হয়নি।</div></div></section>
+<section id="delivery" class="page"><h2>ডেলিভারি ট্র্যাকিং</h2><div class="card"><div class="note">অর্ডারের পাশে থাকা স্ট্যাটাস পরিবর্তন করলেই ডেলিভারি তালিকা আপডেট হবে।</div><div id="deliveryList" class="empty">এখনো কোনো ডেলিভারি নেই।</div></div></section>
+<section id="reports" class="page"><h2>বিক্রির রিপোর্ট</h2><div class="grid"><div class="card"><div class="metric">মোট বিক্রি</div><div class="num" id="allSales">৳০</div></div><div class="card"><div class="metric">পণ্যের ক্রয়মূল্য</div><div class="num" id="allCost">৳০</div></div><div class="card"><div class="metric">ডেলিভারি খরচ</div><div class="num" id="allShip">৳০</div></div><div class="card"><div class="metric">আনুমানিক লাভ</div><div class="num green" id="allProfit">৳০</div></div></div><div class="card"><h3>মাসভিত্তিক রিপোর্ট</h3><div id="monthly" class="empty">রিপোর্টের জন্য অর্ডার যোগ করুন।</div></div><div class="card"><button class="btn secondary" onclick="exportData()">ডেটা ব্যাকআপ ডাউনলোড (JSON)</button> <button class="btn danger" onclick="clearData()">সব ডেটা মুছুন</button><p class="note">লাভের হিসাব: বিক্রয় মূল্য − পণ্যের ক্রয়মূল্য − ডেলিভারি খরচ। অন্যান্য ব্যবসায়িক খরচ আলাদা করে এখনো যোগ করা হয়নি।</p></div></section>
+</main>
+<script>
+const $=id=>document.getElementById(id); const money=n=>'৳'+Number(n||0).toLocaleString('en-BD',{maximumFractionDigits:2});
+const today=()=>new Date().toISOString().slice(0,10);
+$('odate').value=today();
+let data;try{data=JSON.parse(localStorage.getItem('ssbd_data')||'{"orders":[],"stock":[]}')}catch(e){data={orders:[],stock:[]}}
+function save(){localStorage.setItem('ssbd_data',JSON.stringify(data));render()}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));render()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function profit(o){return Number(o.sale)-Number(o.cost)-Number(o.shipcost)}
+$('orderForm').addEventListener('submit',e=>{e.preventDefault();data.orders.unshift({id:Date.now(),name:$('cname').value.trim(),phone:$('phone').value.trim(),date:$('odate').value,address:$('address').value.trim(),product:$('product').value.trim(),sale:+$('sale').value,cost:+$('cost').value,shipcost:+$('shipcost').value||0,payment:$('payment').value,status:$('status').value});e.target.reset();$('odate').value=today();save();showPage('orders')});
+$('stockForm').addEventListener('submit',e=>{e.preventDefault();data.stock.push({id:Date.now(),name:$('sname').value.trim(),qty:+$('qty').value,cost:+$('unitcost').value,price:+$('unitprice').value,sku:$('sku').value.trim()});e.target.reset();save()});
+function changeStatus(id,val){const o=data.orders.find(x=>x.id===id);if(o){o.status=val;save()}}
+function delOrder(id){if(confirm('এই অর্ডারটি মুছবেন?')){data.orders=data.orders.filter(o=>o.id!==id);save()}}
+function delStock(id){if(confirm('এই পণ্যটি মুছবেন?')){data.stock=data.stock.filter(s=>s.id!==id);save()}}
+function render(){
+const orders=data.orders, stock=data.stock, total=arr=>arr.reduce((a,b)=>a+b,0), sales=total(orders.filter(o=>o.status!=='Cancelled').map(o=>+o.sale)), costs=total(orders.filter(o=>o.status!=='Cancelled').map(o=>+o.cost)), ships=total(orders.filter(o=>o.status!=='Cancelled').map(o=>+o.shipcost)), prof=sales-costs-ships;
+$('todaySales').textContent=money(total(orders.filter(o=>o.date===today()&&o.status!=='Cancelled').map(o=>+o.sale)));
+$('orderCount').textContent=orders.filter(o=>o.status!=='Cancelled').length;$('profit').textContent=money(total(orders.filter(o=>o.date===today()&&o.status!=='Cancelled').map(profit)));$('stockCount').textContent=stock.reduce((a,s)=>a+(+s.qty),0);
+const orderHtml=o=>`<div class="item"><div class="itemtop"><span>${esc(o.product)} · ${money(o.sale)}</span><span class="pill">${esc(o.status)}</span></div><div class="small">${esc(o.name)} · ${esc(o.phone)} · ${esc(o.date)}</div><div class="small">লাভ: ${money(profit(o))} · পেমেন্ট: ${esc(o.payment)}</div><label>স্ট্যাটাস পরিবর্তন</label><select onchange="changeStatus(${o.id},this.value)">${['Pending','Processing','Shipped','Delivered','Cancelled'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn danger" onclick="delOrder(${o.id})">অর্ডার মুছুন</button></div>`;
+$('orderList').innerHTML=orders.length?orders.map(orderHtml).join(''):'<div class="empty">কোনো অর্ডার নেই।</div>';
+$('recentOrders').innerHTML=orders.length?orders.slice(0,3).map(o=>`<div class="item"><div class="itemtop">${esc(o.name)} <span>${money(o.sale)}</span></div><div class="small">${esc(o.product)} · ${esc(o.status)}</div></div>`).join(''):'এখনো কোনো অর্ডার নেই।';
+const cust={};orders.forEach(o=>{if(!cust[o.phone])cust[o.phone]={...o,count:0};cust[o.phone].count++});
+$('customerList').innerHTML=Object.values(cust).map(c=>`<div class="item"><div class="itemtop">${esc(c.name)} <span class="pill">${c.count}টি অর্ডার</span></div><div class="small">${esc(c.phone)} · ${esc(c.address||'ঠিকানা দেওয়া হয়নি')}</div></div>`).join('')||'<div class="empty">এখনো কাস্টমার নেই।</div>';
+$('stockList').innerHTML=stock.map(s=>`<div class="item"><div class="itemtop">${esc(s.name)} <span class="pill">স্টক: ${s.qty}</span></div><div class="small">ক্রয় ${money(s.cost)} · বিক্রয় ${money(s.price)} ${s.sku?'· '+esc(s.sku):''}</div><button class="btn secondary" onclick="adjustStock(${s.id},1)">+১</button> <button class="btn secondary" onclick="adjustStock(${s.id},-1)">−১</button> <button class="btn danger" onclick="delStock(${s.id})">মুছুন</button></div>`).join('')||'<div class="empty">এখনো পণ্য যোগ করা হয়নি।</div>';
+$('deliveryList').innerHTML=orders.map(o=>`<div class="item"><div class="itemtop">${esc(o.product)} <span class="pill">${esc(o.status)}</span></div><div class="small">${esc(o.name)} · ${esc(o.phone)} · ${esc(o.address||'ঠিকানা নেই')}</div><select onchange="changeStatus(${o.id},this.value)">${['Pending','Processing','Shipped','Delivered','Cancelled'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></div>`).join('')||'<div class="empty">এখনো কোনো ডেলিভারি নেই।</div>';
+$('allSales').textContent=money(sales);$('allCost').textContent=money(costs);$('allShip').textContent=money(ships);$('allProfit').textContent=money(prof);
+const months={};orders.filter(o=>o.status!=='Cancelled').forEach(o=>{let m=(o.date||'তারিখ নেই').slice(0,7);if(!months[m])months[m]={sale:0,profit:0,count:0};months[m].sale+=+o.sale;months[m].profit+=profit(o);months[m].count++});
+$('monthly').innerHTML=Object.keys(months).sort().reverse().map(m=>`<div class="item"><div class="itemtop">${esc(m)} <span>${money(months[m].sale)}</span></div><div class="small">${months[m].count}টি অর্ডার · আনুমানিক লাভ ${money(months[m].profit)}</div></div>`).join('')||'<div class="empty">রিপোর্টের জন্য অর্ডার যোগ করুন।</div>';
+}
+function adjustStock(id,delta){let s=data.stock.find(x=>x.id===id);if(s){s.qty=Math.max(0,s.qty+delta);save()}}
+function exportData(){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=url;a.download='smart-seller-bd-backup.json';a.click();URL.revokeObjectURL(url)}
+function clearData(){if(confirm('সব অর্ডার ও স্টক স্থায়ীভাবে মুছবেন? আগে ব্যাকআপ ডাউনলোড করে নিন।')){data={orders:[],stock:[]};save()}}
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script></body></html>
